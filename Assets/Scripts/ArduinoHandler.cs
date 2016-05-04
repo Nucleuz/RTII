@@ -124,47 +124,42 @@ public class ArduinoHandler : MonoBehaviour {
                 canvas.SetActive(true);
             }
 
-            if (LEDboolean)
-            {
+            // Check if the LED is ready to be activated
+            if (LEDboolean) {
+                // simple timer
                 timePassed += Time.deltaTime;
-                Debug.Log(timePassed);
 
-                if (!rndIsSet)
-                {
+                // Check if random number is set for the LED to light up
+                if (!rndIsSet) {
                     rnd = UnityEngine.Random.Range(2, 7);
                     rndIsSet = true;
                 }
                 
-                if (timePassed < 15)
-                {
-                    Debug.Log(rnd);
-                    //Debug.Log(timePassed);
-
-                    if (timePassed >= rnd)
-                    {
-                        
-                        Debug.Log("Times passed is bigger than RND!");
+                // Used to light the LED once within every 15 secs.
+                if (timePassed < 15) {
+                    // Check if the time passed is more than the rnd number for the LED
+                    if (timePassed >= rnd) {
+                        // Turn on LED
                         arduino.digitalWrite(pinLed, Arduino.HIGH);
 
-
-                        if(touchValue == 1)
-                        {
+                        // Detect if player activates the touch sensor
+                        if(touchValue == 1) {
                             hasTouched = true;
                         } 
 
-                        if (timePassed > rnd + 2)
-                        {
+                        if (timePassed > rnd + 2) {
+                            // Turn off LED since 2 seconds have passed the rnd number
                             arduino.digitalWrite(pinLed, Arduino.LOW);
-                            if (!hasTouched)
-                            {
+
+                            // Used to decrease the players health if he didn't activate the touch sensor with the 2 seconds
+                            if (!hasTouched) {
                                 p.DecreaseHealthPoints();
                                 hasTouched = true;
                             }
                         }
                     }
-                }
-                else
-                {
+                } else {
+                    // Used to reset everything
                     timePassed = 0;
                     LEDboolean = false;
                     LEDboolean = true;
